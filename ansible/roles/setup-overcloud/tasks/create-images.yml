@@ -1,0 +1,19 @@
+---
+- name: Download images
+  get_url:
+      url: "{{ item.url }}"
+      dest: "{{ item.dest }}"
+  with_items: "{{ overcloud_images }}"
+  delegate_to: "{{ groups.shade | first }}"
+- name: upload images to glance
+  vars:
+    ansible_python_interpreter: "/var/tmp/venv_shade/bin/python"
+  os_image:
+    name: "{{ item.imagename }}"
+    state: present
+    validate_certs: no
+    cloud: overcloud
+    is_public: yes
+    filename: '{{ item.dest}}'
+  delegate_to: "{{ groups.shade | first }}"
+  with_items: "{{ overcloud_images }}"

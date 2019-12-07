@@ -1,0 +1,14 @@
+---
+- hosts: openstack_nodes
+  tasks:
+    - name: Install pcp
+      package:
+          name: ['pcp-zeroconf']
+      become: true
+    - name: Start pcp
+      shell:
+        systemctl enable pmcd
+        systemctl enable pmlogger
+        systemctl start pmcd
+        systemctl start pmlogger
+      become: true

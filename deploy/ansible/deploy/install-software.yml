@@ -1,0 +1,22 @@
+---
+- name: Setup software
+  hosts: openstack_nodes
+  tasks:
+    - name: install packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+          - python-devel
+          - cmake
+          - make
+          - gcc
+          - gcc-c++
+          - vim
+          - git
+          - deltarpm
+          - sysstat
+      become: true
+    - name: install epel
+      command: yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      become: yes

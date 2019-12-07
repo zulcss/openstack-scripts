@@ -1,0 +1,46 @@
+From 21944f768605445d9d5caa14ac3ef85fd593e0f1 Mon Sep 17 00:00:00 2001
+From: Charles Short <chucks@redhat.com>
+Date: Fri, 12 Jul 2019 07:59:50 -0400
+Subject: [PATCH] add proxy
+
+Signed-off-by: Charles Short <chucks@redhat.com>
+---
+ plugins/tripleo-overcloud/pre.yml | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/plugins/tripleo-overcloud/pre.yml b/plugins/tripleo-overcloud/pre.yml
+index 189401e..c92b085 100644
+--- a/plugins/tripleo-overcloud/pre.yml
++++ b/plugins/tripleo-overcloud/pre.yml
+@@ -4,6 +4,28 @@
+   tags: init
+   any_errors_fatal: true
+   tasks:
++       - name: check dnf presence
++         stat:
++           path: /etc/dnf/dnf.conf
++           register: dnf_state
++       - name: set proxy for yum
++         ini_file:
++           backup: yes
++           path: /etc/yum.conf
++           option: proxy
++           section: main
++           value: "http://192.168.0.11:3128"
++         become: yes
++       - name: inject proxy for dnf
++         when:
++             - dnf_state.stat.exists
++         ini_file:
++           backup: yes
++           path: /etc/dnf/dnf.conf
++           option: proxy
++           section: main
++           value: "http://192.168.0.11:3128"
++         become: yes
+        - name: Install pre-defined Undercloud packages for OSP 12 and beyond
+          package:
+              name: "{{ install.undercloud.packages }}"
+-- 
+1.8.3.1
+

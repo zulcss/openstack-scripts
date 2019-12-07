@@ -1,0 +1,11 @@
+- name: Create security groups
+  hosts: undercloud
+  vars_files:
+    - vars/openstack.yml
+  tasks:
+    - name: Create security groups
+      shell: |
+        source ~/overcloudrc
+        openstack security group create "{{ security_group }}"
+        openstack security group rule create --ingress --protocol tcp --dst-port 22 "{{ security_group }}"
+        openstack security group rule create --ingress --protocol icmp "{{ security_group }}"

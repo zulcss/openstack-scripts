@@ -1,0 +1,44 @@
+provision:
+  bootmode: hd
+  cleanup: true
+  collect:
+    ansible:
+      facts: false
+  disk:
+    bus: virtio
+    pool: /var/lib/libvirt/images
+  force:
+    image:
+      download: false
+  host:
+    address:
+    - localhost
+    key: /home/chuck/.ssh/id_rsa
+    memory:
+      overcommit: true
+    mtu:
+      size: false
+    user: root
+    validate: true
+  image:
+    mirror:
+      url: https://url.corp.redhat.com/rhos-qe-mirror-tlv
+    url: http://rhos-qe-mirror-qeos.usersys.redhat.com/released/RHEL-7/7.6/Server/x86_64/images/rhel-guest-image-7.6-210.x86_64.qcow2
+  serial:
+    files: false
+  topology:
+    extend: false
+    network: /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/network/3_nets.yml
+    nodes:
+      /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/compute.yml: 1
+      /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/controller.yml: 1
+      /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/undercloud.yml: 1
+    username: cloud-user
+  virsh:
+    snapshot:
+      create: false
+      export: false
+      import: false
+      restore: false
+      servers: .*
+  virtopts: ''

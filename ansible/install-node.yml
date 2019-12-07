@@ -1,0 +1,21 @@
+---
+- hosts: undercloud
+  tasks:
+    - name: Setup dotfiles
+      block:
+        - name: Clone dotfiles
+          git:
+            repo: https://github.com/zulcss/dotfiles
+            dest: /home/stack/dotfiles
+        - name: Setup dotifles
+          shell: |
+            rm -f .bashrc
+            rm -f .gitconfig
+            ln -s dotfiles/.bashrc
+            ln -s dotfiles/.gitconfig
+          args:
+            chdir: /home/stack
+    - name: install packages
+      package:
+          name: ['vim', 'tmux']
+      become: yes

@@ -1,0 +1,12 @@
+---
+- name: Confgiure stack user
+  hosts: openstack_nodes
+  tasks:
+    - name: Setup envrionment
+      shell: |
+        git clone https://github.com/zulcss/dotfiles
+        rm -f .bashrc
+        ln -s dotfiles/.bashrc ~/.bashrc
+        ln -s dotfiles/.gitconfig ~/.gitconfig
+      ignore_errors: yes
+

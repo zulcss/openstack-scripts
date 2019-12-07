@@ -1,0 +1,31 @@
+From 66111dfce5e6a57c210411fd9cca4ddee4a5c084 Mon Sep 17 00:00:00 2001
+From: Charles Short <chucks@redhat.com>
+Date: Mon, 22 Jul 2019 09:29:59 -0400
+Subject: [PATCH] remove dstat
+
+Signed-off-by: Charles Short <chucks@redhat.com>
+---
+ plugins/tripleo-undercloud/setup_packages.yml | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/plugins/tripleo-undercloud/setup_packages.yml b/plugins/tripleo-undercloud/setup_packages.yml
+index 4e72b35..f622335 100644
+--- a/plugins/tripleo-undercloud/setup_packages.yml
++++ b/plugins/tripleo-undercloud/setup_packages.yml
+@@ -103,13 +103,6 @@
+             dest: /etc/yum.repos.d/
+         with_items: "{{ custom_repos.urls|default([]) }}"
+ 
+-      - name: Setup and start dstat
+-        import_role:
+-          name: dstat
+-        vars:
+-          dstat_output_dir: '/var/log/extra'
+-        tags: dstat
+-
+       - name: install packages on Undercloud
+         package:
+           name: "{{ install.packages }}"
+-- 
+1.8.3.1
+

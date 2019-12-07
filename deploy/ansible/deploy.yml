@@ -1,0 +1,17 @@
+---
+- name: setup for me
+  hosts: openstack_nodes
+  tasks:
+    - name: install packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+          - python3-devel
+          - cmake
+          - make
+          - gcc
+          - gcc-c++
+          - vim
+            #- include_playbook: disbale-ipv6.yml
+      become: true

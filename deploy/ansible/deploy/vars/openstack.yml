@@ -1,0 +1,48 @@
+---
+key_name: my_key
+security_group: browbeat
+cloud_guest_images:
+    cirros:
+      name: cirros
+      url: http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
+    centos7:
+      name: centos7
+      url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
+    rhel7:
+      name: rhel7
+      url: http://rhos-qe-mirror-qeos.usersys.redhat.com/released/RHEL-7/7.6/Server/x86_64/images/rhel-guest-image-7.6-210.x86_64.qcow2
+    rhel8:
+      name: rhel8
+      url: http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/8.0/1845/images/rhel-guest-image-8.0-1845.x86_64.qcow2
+
+overcloud_flavors:
+    - name: m1.xtiny
+      cpu: 1
+      memory: 64
+      disk: 1
+    - name: m1.tiny-centos
+      cpu: 1
+      memory: 192
+      disk: 8
+    - name: m1.tiny
+      cpu: 1
+      memory: 512
+      disk: 1
+    - name: m1.small
+      cpu: 1
+      memory: 2048
+      disk: 20
+    - name: m1.medium
+      cpu: 2
+      memory: 4096
+      disk: 40
+    - name: m1.large
+      cpu: 4
+      memory: 8192
+      disk: 80
+    - name: m1.xlarge
+      cpu: 8
+      memory: 16384
+      disk: 160
+
+

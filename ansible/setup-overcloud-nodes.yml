@@ -1,0 +1,29 @@
+---
+- name: Install repo on overcloud nodes
+  hosts: undercloud
+  tasks:
+    - name: Check undercloud repos
+      find:
+        path: "/etc/yum.repos.d/"
+      register: repos_list
+
+    - name: Copy repo files
+      slurp:
+        src: "{{ item.path }}"
+      loop: "{{ repos_list.files }}"
+      register: repos_copy
+
+- name: Install repos on overcloud nodes
+  hosts: openstack_nodes
+  become: true
+  become_method: sudo
+  become_user: root
+  tasks:
+    - name: Set the repos on overcloud nodes
+      copy:
+        dest: "{{ item.item.path }}"
+        content: "{{ item.content | b64decode }}"
+        owner: root
+        group: root
+        mode: 0644
+      loop: "{{ hostvars[groups['undercloud'][0]].repos_copy.results }}"

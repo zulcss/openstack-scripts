@@ -1,0 +1,10 @@
+---
+- hosts: undercloud,overcloud_nodes
+  tasks:
+    - name: Install pcp
+      dnf:
+          name: ['firewalld', 'pcp-zeroconf']
+          state: present
+      become: true
+
+

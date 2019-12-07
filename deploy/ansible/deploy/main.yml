@@ -1,0 +1,6 @@
+- import_playbook: install-software.yml
+- import_playbook: create-images.yml
+- import_playbook: create-flavors.yml
+- import_playbook: create-keys.yml
+- import_playbook: create-security-group.yml
+

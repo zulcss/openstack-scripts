@@ -1,0 +1,12 @@
+---
+- name: Create ssh key
+  hosts: undercloud
+  vars_files:
+    - vars/openstack.yml
+  tasks:
+    - name: Create keypair name
+      shell: |
+        source ~/overcloudrc
+        openstack keypair create "{{ key_name }}" > /home/stack/"{{ key_name }}".pem
+        chmod 0600 /home/stack/"{{ key_name }}".pem
+

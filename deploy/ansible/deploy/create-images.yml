@@ -1,0 +1,29 @@
+---
+- name: Upload image to openstack
+  hosts: undercloud
+  vars_files:
+      - vars/openstack.yml
+  tasks:
+    - name: Create directory to store images
+      file:
+          name: images
+          state: directory
+    - name: Download images
+      get_url:
+        url: "{{ cloud_guest_images[item].url }}"
+        dest: "/home/stack/images/{{ cloud_guest_images[item].name }}.qcow2"
+      with_items: "{{ cloud_guest_images }}"
+    - name: Determine if image exiss
+      shell: |
+          source ~/overcloudrc
+          openstack image list | grep '{{cloud_guest_images[item].name}}'
+      register: image_exists
+      ignore_errors: true
+      changed_when: false
+      with_items: "{{ cloud_guest_images }}"
+    - name: Upload image into cloud
+      shell: |
+          source ~/overcloudrc
+          openstack image create --public --disk-format=qcow2 --container-format=bare {{cloud_guest_images[item].name}} \
+            --file /home/stack/images/{{cloud_guest_images[item].name}}.qcow2
+      with_items: "{{ cloud_guest_images }}"

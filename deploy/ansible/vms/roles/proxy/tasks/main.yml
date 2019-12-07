@@ -1,0 +1,25 @@
+---
+- name: proxy configurations
+  block:
+    - name: check dnf presence
+      stat:
+        path: /etc/dnf/dnf.conf
+      register: dnf_state
+    - name: set proxy for yum
+      ini_file:
+        backup: yes
+        path: /etc/yum.conf
+        option: proxy
+        section: main
+        value: "http://192.168.0.11:3128"
+      become: yes
+    - name: inject proxy for dnf
+      when:
+        - dnf_state.stat.exists
+      ini_file:
+        backup: yes
+        path: /etc/dnf/dnf.conf
+        option: proxy
+        section: main
+        value: "http://192.168.0.11:3128"
+      become: yes

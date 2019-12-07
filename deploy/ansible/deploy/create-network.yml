@@ -1,0 +1,42 @@
+---
+- name: create external network
+  hosts: undercloud
+  vars:
+    network_environment_file: "network-environment.yaml"
+    physnet_name: datacentre
+    template_base: "/home/stack"
+  tasks:
+    - name: Check for deployment network configuration file
+      find:
+         paths: "{{ template_base }}"
+         patterns: "{{ network_environment_file }}"
+         recurse: yes
+      register: network_environment_file_path
+    - name: read deployment nework configuration
+      command: cat "{{ network_environment_file_path.files[0].path }}"
+      register: network_template_out
+      when: network_environment_file_path.matched > 0
+      changed_when: false
+    - name: load deploy network configuration as YAML
+      set_fact:
+        network_template: "{{ network_template_out.stdout | from_yaml }}"
+      when: network_environment_file_path.matched > 0
+    - name: create the network
+      vars:
+          pool_start: "{{ network_template.parameter_defaults.ExternalAllocationPools[0].start }}"
+          pool_end: "{{ network_template.parameter_defaults.ExternalAllocationPools[0].end }}"
+          cidr: "{{ network_template.parameter_defaults.ExternalNetCidr }}"
+          gateway_ip: "{{ network_template.parameter_defaults.ExternalInterfaceDefaultRoute }}"
+          dns_nameserver: 8.8.8.8
+          private_cidr: 10.1.1.0/24
+          network_name: "floating"
+          private_network: 10.1.1.0/24
+      shell: |
+          source ~/overcloudrc
+          neutron net-create {{ network_name }}-network --router:external=True --provider:physical_network datacentre --provider:network_type flat
+          neutron subnet-create --name {{ network_name }}-subnet --disable-dhcp --allocation-pool start={{ pool_start }},end={{ pool_end }} --gateway {{ gateway_ip }} floating-network {{ cidr }}
+          neutron net-create private-network
+          neutron subnet-create private-network {{ private_network }} --name {{ network_name }}-subnet
+          neutron router-create {{ network_name }}-router
+          neutron router-interface-add {{network_name}}-router {{ network_name }}-subnet
+          neutron router-gateway-set {{network_name}}-router {{ network_name}}-network
