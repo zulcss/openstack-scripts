@@ -1,0 +1,33 @@
+---
+- hosts: undercloud
+  tasks:
+    - name: Install pmda modules
+      package:
+        name: ['pcp-pmda-mysql',
+               'pcp-pmda-podman',
+               'pcp-pmda-logger',
+               'pcp-pmda-mounts',
+               'pcp-pmda-haproxy']
+      become: yes
+
+- hosts: controller
+  tasks:
+    - name: install pmda modules
+      package:
+        name: ['pcp-pmda-mysql',
+               'pcp-pmda-podman',
+               'pcp-pmda-logger',
+               'pcp-pmda-mounts',
+               'pcp-pmda-haproxy']
+      become: yes
+
+- hosts: compute
+  tasks:
+    - name: install pmda modules
+      package:
+        name: ['pcp-pmda-podman',
+               'pcp-pmda-logger',
+               'pcp-pmda-libvirt']
+      become: yes
+
+

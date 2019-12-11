@@ -1,14 +1,14 @@
 ---
-- hosts: openstack_nodes
+- hosts: overcloud_nodes
   tasks:
     - name: Install pcp
       package:
-          name: ['pcp-zeroconf']
+          name: ['pcp']
       become: true
     - name: Start pcp
-      shell:
-        systemctl enable pmcd
-        systemctl enable pmlogger
-        systemctl start pmcd
-        systemctl start pmlogger
+      shell: |
+       service firewalld start
+       firewall-cmd --add-port=44321/tcp --permanent
+       systemctl start pmcd
+       systemctl enable pmcd
       become: true

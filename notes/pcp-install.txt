@@ -1,0 +1,20 @@
+yum install pcp
+systemctl enable pmcd
+systemctl enable pmlogger
+systemctl start pmcd
+systemctl start pmlogger
+
+Add to /etc/pcp/pmcd/pmcd.options
+
+-i <ip address>
+
+Add to /etc/pcp/pmcd/pmcd.conf
+
+allow <undercloud external hostname>, "local:*" : all;
+
+firewall-cmd --permanent --zone=public --add-service=pmcd
+firewall-cmd --reload
+
+Restart pmcd
+
+service pcmd restart
