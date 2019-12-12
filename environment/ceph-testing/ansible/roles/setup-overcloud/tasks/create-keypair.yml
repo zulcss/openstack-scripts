@@ -1,0 +1,8 @@
+---
+- name: Create keypair
+  os_keypair:
+    validate_certs: no
+    cloud: overcloud
+    state: present
+    name: "admin"
+    public_key_file: "/home/stack/.ssh/authorized_keys"

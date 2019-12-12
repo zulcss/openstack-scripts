@@ -1,0 +1,41 @@
+---
+overcloud_flavors:
+    - name: m1.xtiny
+      vcpus: 1
+      ram: 64
+      disk: 1
+    - name: m1.tiny-centos
+      vcpus: 1
+      ram: 192
+      disk: 8
+    - name: m1.tiny
+      vcpus: 1
+      ram: 512
+      disk: 1
+    - name: m1.small
+      vcpus: 1
+      ram: 2048
+      disk: 20
+    - name: m1.medium
+      vcpus: 2
+      ram: 4096
+      disk: 40
+    - name: m1.large
+      vcpus: 4
+      ram: 8192
+      disk: 80
+    - name: m1.xlarge
+      vcpus: 8
+      ram: 16384
+      disk: 160
+
+overcloud_images:
+    - url: 'http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/8.1/324/images/rhel-guest-image-8.1-324.x86_64.qcow2'
+      dest: '/tmp/rhel81'
+      imagename: 'rhel81'
+    - url: 'https://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img'
+      dest: '/tmp/cirros'
+      imagename: 'cirros'
+    - url: 'https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2c'
+      dest: '/tmp/cenos7'
+      imagename: 'centos7'

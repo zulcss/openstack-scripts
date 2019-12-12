@@ -1,0 +1,6 @@
+---
+- name: install fio
+  package:
+     name: [fio, bc]
+     state: present
+  become: yes

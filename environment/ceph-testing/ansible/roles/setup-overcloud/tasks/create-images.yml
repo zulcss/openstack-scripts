@@ -1,0 +1,15 @@
+---
+- name: Download images
+  get_url:
+      url: "{{ item.url }}"
+      dest: "{{ item.dest }}"
+  with_items: "{{ overcloud_images }}"
+- name: upload images to glance
+  os_image:
+    name: "{{ item.imagename }}"
+    state: present
+    validate_certs: no
+    cloud: overcloud
+    is_public: yes
+    filename: '{{ item.dest}}'
+  with_items: "{{ overcloud_images }}"

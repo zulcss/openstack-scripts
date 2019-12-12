@@ -1,0 +1,6 @@
+---
+- name: create volume
+  os_volume:
+    state: present
+    size: 10
+    display_name: "volume-test"

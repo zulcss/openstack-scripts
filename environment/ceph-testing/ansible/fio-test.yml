@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  tasks:
+    - name: deploy fio test instance
+      os_server:
+          state: present
+          name: "centos-f"
+          image: centos7
+          flavor: m1.xlarge
+          key_name: admin
+          security_groups: admin
+          nics:
+            - net-name: private
+          volumes:
+            - volume-test
+          auto_ip: yes
+      register: fio_test
+    - include_tasks: ./tasks/create-volume.yml
+    - name: Wait for SSH on the Instance
+      command: >
+         ssh -oBatchMode=yes -oStrictHostKeyChecking=no \
+           centos@{{fio_test.server.public_v4}} true
+      register: result
+      until: result|success
+      retries: 30
+      delay: 10
+    - name: Add instance to inventory
+      add_host:
+         name: centos-fio
+         groups: centos-fio-test
+         ansible_ssh_host: "{{ fio_test.server.public_v4 }}"
+
+- hosts: centos-fio-test
+  remote_user: centos
+  roles:
+    - fio-test
