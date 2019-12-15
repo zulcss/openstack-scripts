@@ -1,0 +1,4 @@
+---
+- hosts: undercloud
+  roles:
+    - setup-overcloud

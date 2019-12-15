@@ -1,0 +1,49 @@
+---
+- hosts: undercloud
+  vars:
+    network_environment_file: "network-environment.yaml"
+    physnet_name: datacentre
+    template_base: "{{ ansible_user_dir}}/virt"
+  tasks:
+    - name: Get default gateway interface
+      shell: |
+        ip r | grep default  | sed -n 's/.* dev \([[:alnum:]]*\) .*/\1/p'
+      register: default_interface
+    - name: Setup iptables rules
+      shell: |
+        iptables -t nat -A POSTROUTING -o {{ default_interface.stdout }} -j MASQUERADE
+        iptables -I FORWARD -j ACCEPT
+      become: true
+    - name: check the deployment network configuration file
+      find:
+         paths: "{{ template_base }}"
+         patterns: "{{ network_environment_file }}"
+         recurse: yes
+      register: network_environment_file_path
+    - name: read deployment network configuraton
+      command: cat {{ network_environment_file_path.files[0].path }}
+      register: network_template_out
+      when: network_environment_file_path.matched > 0
+      changed_when: false
+    - name: load deployment network configuration as YAML
+      set_fact:
+          network_template: "{{ network_template_out.stdout | from_yaml }}"
+      when: network_environment_file_path.matched > 0
+    - debug:
+        msg: "{{ network_template.parameter_defaults.ExternalNetCidr }}"
+    - name: setup network
+      shell: |
+        source ~/overcloudrc
+
+        openstack network create --share --external --provider-network-type vlan \
+          --provider-segment "{{ network_template.parameter_defaults.ExternalNetworkVlanID }}" \
+          --provider-physical-network datacentre public
+        openstack subnet create --network public --subnet-range "{{ network_template.parameter_defaults.ExternalNetCidr }}" \
+          --no-dhcp public-subnet
+        openstack network create --share --provider-network-type geneve private
+        openstack subnet create private-subnet --subnet-range 192.0.2.0/24 --network private
+
+        openstack router create default-router
+        openstack router add subnet default-router private-subnet
+        openstack router set --external-gateway public default-router
+

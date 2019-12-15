@@ -6,7 +6,7 @@
           state: present
           name: "centos-f"
           image: centos7
-          flavor: m1.medium
+          flavor: m1.xlarge
           key_name: admin
           security_groups: admin
           nics:

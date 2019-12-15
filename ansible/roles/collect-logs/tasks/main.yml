@@ -1,0 +1,3 @@
+---
+- import_tasks: controller.yml
+  when: controller | bool

@@ -1,0 +1,7 @@
+---
+- name: add floating ip address
+  os_floating_ip:
+     state: present
+     reuse: yes
+     server: centos-fio-test
+     network: public

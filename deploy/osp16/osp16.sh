@@ -29,7 +29,7 @@ SSHSTACK="ssh -F $SSHCONF -l stack undercloud-0"
 #TOPOLOGY_NODES=undercloud:1,controller:3,database:3,messaging:3,networker:2,compute:2,ceph:3
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:1,freeipa:1
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:2
-TOPOLOGY_NODES=undercloud:1,controller:1,compute:1
+TOPOLOGY_NODES=undercloud:1,controller:3,compute:1
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:2
 #TOPOLOGY_NODES=undercloud:1,controller:3,database:1
 TOPOLOGY_NET=3_nets
@@ -37,7 +37,8 @@ TOPOLOGY_NET=3_nets
 #RHEL8URL="http://download-node-02.eng.bos.redhat.com/rel-eng/latest-RHEL-8/compose/BaseOS/x86_64/images"
 #RHEL8IMG=$(curl -s $RHEL8URL/MD5SUM | grep -e "^MD5.*rhel-guest-image.*" | awk '$0=$2' FS=\( RS=\))
 #IMG_URL_8="$RHEL8URL/$RHEL8IMG"
-IMG_URL_8="http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/8.0/1845/images/rhel-guest-image-8.0-1845.x86_64.qcow2"
+IMG_URL_8="http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/8.1/341/images/rhel-guest-image-8.1-341.x86_64.qcow2"
+#IMG_URL_8="http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/8.0/1845/images/rhel-guest-image-8.0-1845.x86_64.qcow2"
 
 PROVISION_SETTINGS=./provision-bandini.yml
 #MIRROR=bos
@@ -107,7 +108,7 @@ function create_vms() {
     -e override.controller.cpu=4 \
     -e override.controller.memory=20480 \
     -e override.compute.cpu=2 \
-    -e override.compute.memory=8192 \
+    -e override.compute.memory=16192 \
     -e freeipa_epel_repo_url='' \
     -e freeipa_additional_repos=''
 

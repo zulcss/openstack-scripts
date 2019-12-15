@@ -1,0 +1,30 @@
+----
+- nane: Gather controller logs
+  hosts: controller
+  gather_facts: yes
+  become: no
+  vars:
+    config_type: controller
+  roles:
+    - collect-logs
+  tags: controller
+
+- name: Gather undercloud logs
+  hosts: undercloud
+  gather_facts: yes
+  become: no
+  vars:
+    config_type: undercloud
+  roles:
+    - collect-logs
+  tags: undercloud
+
+- name: Gather compute logs
+  hosts: compute
+  gather_facts: yes
+  become: no
+  vars:
+    config_type: compute
+  roles:
+    - collect-logs
+  tags: compute
