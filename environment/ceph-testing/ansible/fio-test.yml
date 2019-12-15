@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   tasks:
+    - include_tasks: ./tasks/create-volume.yml
     - name: deploy fio test instance
       os_server:
           state: present
@@ -15,7 +16,6 @@
             - volume-test
           auto_ip: yes
       register: fio_test
-    - include_tasks: ./tasks/create-volume.yml
     - name: Wait for SSH on the Instance
       command: >
          ssh -oBatchMode=yes -oStrictHostKeyChecking=no \
