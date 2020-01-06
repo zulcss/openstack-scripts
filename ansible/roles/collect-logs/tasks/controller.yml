@@ -1,4 +1,0 @@
----
-- name: Fetch log file paths
-  include_vars:
-     file: "vars/{{ config_type }}.yml"

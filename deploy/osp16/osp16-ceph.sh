@@ -29,7 +29,7 @@ SSHSTACK="ssh -F $SSHCONF -l stack undercloud-0"
 #TOPOLOGY_NODES=undercloud:1,controller:3,database:3,messaging:3,networker:2,compute:2,ceph:3
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:1,freeipa:1
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:2
-TOPOLOGY_NODES=undercloud:1,controller:1,compute:1
+TOPOLOGY_NODES=undercloud:1,controller:1,compute:1,ceph:3
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:2
 #TOPOLOGY_NODES=undercloud:1,controller:3,database:1
 TOPOLOGY_NET=3_nets
@@ -109,6 +109,8 @@ function create_vms() {
     -e override.controller.memory=20480 \
     -e override.compute.cpu=2 \
     -e override.compute.memory=16192 \
+    -e override.ceph.cpu=2 \
+    -e override.ceph.memory=8192 \
     -e freeipa_epel_repo_url='' \
     -e freeipa_additional_repos=''
 
@@ -166,6 +168,7 @@ function overcloud_deploy() {
     --network-dvr yes \
     --containers yes \
     --deployment-files virt \
+    --storage-backend ceph \
     --config-heat PythonInterpreter=/usr/bin/python3 \
     --config-heat NeutronNetworkType=geneve \
     --config-heat NeutronTunnelTypes=geneve \
@@ -173,14 +176,6 @@ function overcloud_deploy() {
     --config-heat TimeZone=UTC 
 
 }
-    #--role-files=Controller,Compute \
-    #--overcloud-templates iha \
-    #--overcloud-templates nova-disable-versioned-notifications \
-    #--config-heat ComputeParameters.NeutronBridgeMappings='' \
-    #--config-heat ExtraConfig.glance_backend=file \
-    #--overcloud-ssl o \
-    #--tls-everywhere yes \
-
 
 function overcloud_testprep() {
   source $VENVDIR/bin/activate                                                   

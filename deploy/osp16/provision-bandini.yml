@@ -23,7 +23,7 @@ provision:
   image:
     mirror:
       url: https://url.corp.redhat.com/rhos-qe-mirror-tlv
-    url: http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/8.1/341/images/rhel-guest-image-8.1-341.x86_64.qcow2
+    url: http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/8.1/368/images/rhel-guest-image-8.1-368.x86_64.qcow2
   serial:
     files: false
   topology:
@@ -31,7 +31,7 @@ provision:
     network: /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/network/3_nets.yml
     nodes:
       /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/compute.yml: 1
-      /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/controller.yml: 3
+      /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/controller.yml: 1
       /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/undercloud.yml: 1
     username: cloud-user
   virsh:
