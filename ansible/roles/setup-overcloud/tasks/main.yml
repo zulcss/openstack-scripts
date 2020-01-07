@@ -1,9 +1,9 @@
 ---
-- name: setup flavors
-  import_tasks: flavors.yml
-- name: setup security groups
-  import_tasks: security-group.yml
-- name: create keypair
-  import_tasks: create-keypair.yml
+#- name: setup flavors
+#  import_tasks: flavors.yml
+#- name: setup security groups
+#  import_tasks: security-group.yml
+#- name: create keypair
+#  import_tasks: create-keypair.yml
 - name: upload images
   import_tasks: create-images.yml

@@ -1,11 +1,8 @@
 ---
 - name: Create keypair
-  vars:
-    ansible_python_interpreter: "/var/tmp/venv_shade/bin/python"
   os_keypair:
     validate_certs: no
     cloud: overcloud
     state: present
     name: "admin"
     public_key_file: "/home/stack/.ssh/authorized_keys"
-  delegate_to: "{{ groups.shade | first }}"
