@@ -30,6 +30,7 @@ provision:
     extend: false
     network: /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/network/3_nets.yml
     nodes:
+      /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/ceph.yml: 3
       /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/compute.yml: 1
       /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/controller.yml: 1
       /home/chuck/workspaces/run/localhost/plugins/virsh/defaults/topology/nodes/undercloud.yml: 1

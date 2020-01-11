@@ -46,8 +46,8 @@ MIRROR=rdu2
 SSHKEY=~/.ssh/id_rsa
 VERSION=16-trunk
 #VERSION=15-trunk
-BUILD=latest
-#BUILD=passed_phase1
+#BUILD=latest
+BUILD=passed_phase2
 #BUILD=RHOS_TRUNK-15.0-RHEL-8-20190509.n.1
 
 # cleanup previous vms

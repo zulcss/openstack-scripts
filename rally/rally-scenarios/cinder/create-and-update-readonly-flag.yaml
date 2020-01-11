@@ -1,0 +1,17 @@
+---
+  CinderVolumes.create_volume_and_update_readonly_flag:
+    -
+      args:
+        size: 1
+        read_only: true
+      runner:
+        type: "constant"
+        times: {{times}}
+        times: {{{concurrency}}
+      context:
+        users:
+          tenants: 2
+          users_per_tenant: 2
+      sla:
+        failure_rate:
+          max: 0

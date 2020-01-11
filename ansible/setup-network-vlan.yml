@@ -4,6 +4,13 @@
     network_environment_file: "network-environment.yaml"
     physnet_name: datacentre
     template_base: "{{ ansible_user_dir}}/virt"
+    type: vlan
+    public_network: public
+    public_subnet: public-subnet
+    private_network: private
+    private_subnet: private-subnet
+    private_cidr: 192.0.2.0/24
+    dns_server: 8.8.8.8
   tasks:
     - name: Get default gateway interface
       shell: |
@@ -31,4 +38,20 @@
       when: network_environment_file_path.matched > 0
     - debug:
         msg: "{{ network_template.parameter_defaults.ExternalNetCidr }}"
+    - name: setup network
+      shell: |
+        source ~/overcloudrc
+        openstack network create --share --external --provider-network-type "{{ type }}" \
+           --provider-segment "{{ network_template.parameter_defaults.ExternalNetworkVlanID }}" \
+           --provider-physical-network "{{ physnet_name }}" "{{ public_network }}"
+        openstack subnet create --network public --subnet-range "{{ network_template.parameter_defaults.ExternalNetCidr }}" \
+           --no-dhcp "{{ public_subnet }}"
+        openstack network create --share --provider-network-type geneve "{{ private_network }}"
+        openstack subnet create "{{ private_subnet }}" --subnet-range "{{ private_cidr }}" --network \
+            "{{ private_network }}"
+        openstack router create default-router
+        openstack router add subnet default-router "{{ private_subnet }}"
+        openstack router set --external-gateway "{{ public_network }}" default-router
+
+
 

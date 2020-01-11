@@ -29,7 +29,7 @@ SSHSTACK="ssh -F $SSHCONF -l stack undercloud-0"
 #TOPOLOGY_NODES=undercloud:1,controller:3,database:3,messaging:3,networker:2,compute:2,ceph:3
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:1,freeipa:1
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:2
-TOPOLOGY_NODES=undercloud:1,controller:1,compute:1
+TOPOLOGY_NODES=undercloud:1,controller:1,compute:1,ceph:3
 #TOPOLOGY_NODES=undercloud:1,controller:3,compute:2
 #TOPOLOGY_NODES=undercloud:1,controller:3,database:1
 TOPOLOGY_NET=3_nets
@@ -40,7 +40,6 @@ TOPOLOGY_NET=3_nets
 #IMG_URL_8="http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/8.0/1845/images/rhel-guest-image-8.0-1845.x86_64.qcow2"
 IMG_URL="http://rhos-qe-mirror-qeos.usersys.redhat.com/released/RHEL-7/7.6/Server/x86_64/images/rhel-guest-image-7.6-210.x86_64.qcow2"
 
-PROVISION_SETTINGS=./provision-bandini.yml
 #MIRROR=bos
 MIRROR=rdu2
 SSHKEY=~/.ssh/id_rsa
@@ -103,6 +102,8 @@ function create_vms() {
     -e override.undercloud.memory=20480 \
     -e override.controller.cpu=4 \
     -e override.controller.memory=20480 \
+    -e override.ceph.cpu=2 \
+    -e override.ceph.memory=8192 \
     -e override.compute.cpu=2 \
     -e override.compute.memory=16192 
 }
@@ -139,11 +140,8 @@ function overcloud_deploy() {
     --build ${BUILD} \
     --tls-everywhere no \
     --tht-roles yes \
-    --role-files=Controller,Compute \
-    --deployment-files composable_roles \
-    --config-heat OvercloudControllerOpenstackFlavor=controller \
-    --config-heat ControllerOpenstackCount=3 \
-    --config-heat ControllerOpenstackHostnameFormat='controller-%index%'
+    --storage-backend ceph \
+    --deployment-files virt
 
 }
 

@@ -20,44 +20,46 @@
           patterns: "{{ network_environment_file }}"
           recurse: yes
       register: network_environment_file_path
-    - name: read deployment network configuration
-      command: cat {{ network_environment_file_path.files[0].path }}
-      register: network_template_out
-      when: network_environment_file_path.matched > 0
-      changed_when: false
-    - name: load deployment network configuration as YAML
-      set_fact:
-          network_template: "{{ network_template_out.stdout | from_yaml }}"
-      when: network_environment_file_path.matched > 0
     - debug:
-        msg: "{{ network_template.parameter_defaults.ExternalNetCidr }}"
-    - name: setup network
-      block:
-        - name: Setup public network
-          shell: |
-              source ~/overcloudrc
-              openstack network create --share --external --provider-network-type flat \
-               --provider-physical-network datacentre public
-        - name: Setup public subnet
-          shell: |
-              source ~/overcloudrc
-              openstack subnet create --network public --subnet-range "{{ network_template.parameter_defaults.ExternalNetCidr }}" \
-                --no-dhcp public-subnet
-        - name: Setup private network and subnet
-          shell: |
-              source ~/overcloudrc
-              openstack network create --share --provider-network-type geneve private
-              openstack subnet create private-subnet --subnet-range 192.0.2.0/24 --network \
-                private
-        - name: Setup router
-          shell: |
-            source ~/overcloudrc
-            openstack router create default-router
-            openstack router add subnet default-router private-subnet
-            openstack router set --external-gateway public default-router
-        - name: Setup DNS
-          shell: |
-            source ~/overcloudrc
-            openstack subnet set --dns-nameserver 8.8.8.8 public
-            openstack subnet set --dns-nameserver 8.8.8.8 private
-                                                                                                                
+        msg: "{{ network_environment_file_path }}"
+#    - name: read deployment network configuration
+#      command: cat {{ network_environment_file_path.files[0].path }}
+#      register: network_template_out
+#      when: network_environment_file_path.matched > 0
+#      changed_when: false
+#    - name: load deployment network configuration as YAML
+#      set_fact:
+#          network_template: "{{ network_template_out.stdout | from_yaml }}"
+#      when: network_environment_file_path.matched > 0
+#    - debug:
+#        msg: "{{ network_template.parameter_defaults.ExternalNetCidr }}"
+#    - name: setup network
+#      block:
+#        - name: Setup public network
+#          shell: |
+#              source ~/overcloudrc
+#              openstack network create --share --external --provider-network-type flat \
+#               --provider-physical-network datacentre public
+#        - name: Setup public subnet
+#          shell: |
+#              source ~/overcloudrc
+#              openstack subnet create --network public --subnet-range "{{ network_template.parameter_defaults.ExternalNetCidr }}" \
+#                --no-dhcp public-subnet
+#        - name: Setup private network and subnet
+#          shell: |
+#              source ~/overcloudrc
+#              openstack network create --share --provider-network-type geneve private
+#              openstack subnet create private-subnet --subnet-range 192.0.2.0/24 --network \
+#                private
+#        - name: Setup router
+#          shell: |
+#            source ~/overcloudrc
+#            openstack router create default-router
+#            openstack router add subnet default-router private-subnet
+#            openstack router set --external-gateway public default-router
+#        - name: Setup DNS
+#          shell: |
+#            source ~/overcloudrc
+#            openstack subnet set --dns-nameserver 8.8.8.8 public
+#            openstack subnet set --dns-nameserver 8.8.8.8 private
+#                                                                                                                

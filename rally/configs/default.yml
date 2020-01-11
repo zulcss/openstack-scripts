@@ -1,0 +1,8 @@
+---
+concurrency: 2
+times: 2
+flavor: "m1.nano"
+floating_net: "public"
+super_light: true
+super_light_count: 2
+super_light_concurrency: 2
